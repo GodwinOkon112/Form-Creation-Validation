@@ -4,82 +4,41 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("registration-form");
   const feedbackDiv = document.getElementById("form-feedback");
 
-  // Defensive checks: ensure elements exist
-  if (!form) {
-    console.error('No form found with id="registration-form"');
-    return;
-  }
-  if (!feedbackDiv) {
-    console.error('No feedback element found with id="form-feedback"');
-  }
-
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const userName = document.getElementById("username");
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
+    // retrieve input elements
+    const userName = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-    // Ensure inputs exist
-    if (!userName || !email || !password) {
-      console.error(
-        "One or more input elements were not found (check your IDs)."
-      );
-      feedbackDiv &&
-        (feedbackDiv.textContent = "Form markup error: check input IDs.");
-      feedbackDiv && (feedbackDiv.style.color = "#dc3545");
-      return;
-    }
-
-    // Trim values properly
-    const userValue = userName.value.trim();
-    const emailValue = email.value.trim();
-    const passwordValue = password.value.trim();
-
-    // Reset field styles
-    userName.style.backgroundColor = "";
-    email.style.backgroundColor = "";
-    password.style.backgroundColor = "";
-
-    // Validation
     let isValid = true;
-    const message = [];
+    const messages = [];
 
-    if (userValue.length < 3) {
+    if (userName.length < 3) {
+      messages.push("username must be at least 3 characters long.");
       isValid = false;
-      message.push("Username must be at least 3 characters long.");
-      userName.style.backgroundColor = "rgba(220,53,69,0.1)";
     }
 
-    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/i; // allow 2+ char TLD, case-insensitive
-    if (!emailPattern.test(emailValue)) {
+    if (email.includes("@") === false || email.includes(".") === false) {
       isValid = false;
-      message.push("Please enter a valid email address.");
-      email.style.backgroundColor = "rgba(220,53,69,0.1)";
+      messages.push("please enter a valid email address.");
     }
 
-    if (passwordValue.length < 8) {
+    if (password.length < 8) {
       isValid = false;
-      message.push("Password must be at least 8 characters long.");
-      password.style.backgroundColor = "rgba(220,53,69,0.1)";
+      messages.push("password must be at least 8 characters long.");
     }
 
-    // Show feedback
-    if (feedbackDiv) {
-      if (isValid) {
-        feedbackDiv.textContent = "Registration successful!";
-        feedbackDiv.style.color = "#28a745";
-        // submit only when valid
-        form.submit();
-      } else {
-        feedbackDiv.innerHTML = message.join("<br>");
-        feedbackDiv.style.color = "#dc3545";
-        feedbackDiv.style.display = "block";
-      }
+    // display feedback logic
+    feedbackDiv.style.display = "block";
+    if (isValid) {
+      feedbackDiv.textContent = "Registration successful!";
+      feedbackDiv.style.color = "#28a745";
+      form.submit();
     } else {
-      // If there's no feedbackDiv, still log
-      console.log("Validation result:", isValid, message);
-      if (isValid) form.submit();
+      feedbackDiv.innerHTML = messages.join("<br>");
+      feedbackDiv.style.color = "#dc3545";
     }
   });
 });
