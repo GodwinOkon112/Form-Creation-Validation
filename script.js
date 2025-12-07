@@ -8,14 +8,14 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
 
     // retrieve input elements
-    const userName = document.getElementById("username").value.trim();
+    const username = document.getElementById("username").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
     let isValid = true;
     const messages = [];
 
-    if (userName.length < 3) {
+    if (username.length < 3) {
       messages.push("username must be at least 3 characters long.");
       isValid = false;
     }
